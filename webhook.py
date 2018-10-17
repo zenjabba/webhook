@@ -38,7 +38,7 @@ def addUser(userData):
           "password": "",
           "changePasswordAtNextLogin": True,
           "ipWhiteListed": False,
-          "primaryEmail": "{}.{}@hoard.media".format(userData['first_name'],userData['last_name']),
+          "primaryEmail": "{}.{}@myonlinebackup.org".format(userData['first_name'],userData['last_name']),
           "emails": [
             {
               "address": userData['payer_email'],

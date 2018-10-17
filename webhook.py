@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-from werkzeug.datastructures import ImmutableMultiDict
 from flask import Flask, request, abort
 from googleapiclient.discovery import build
 from httplib2 import Http

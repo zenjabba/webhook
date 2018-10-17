@@ -79,24 +79,28 @@ def getUserDetails(body):
     #Given the raw IPN, extract user details and return as a dictionary from paypal webhook
 
     # Normal arguments:
-    #     body --- Multidict of body from paypal
-
+    # body --- Multidict of body from paypal
+    # wantedFields --- List of desired fields for a valid user
     output = {}
-    if('first_name') in body:
-         output['first_name'] = body['first_name']
-    if('last_name') in body:
-         output['last_name'] = body['last_name']
-    if('payer_email' in body):
-         output['payer_email'] = body['payer_email']
-    if('subscr_id' in body):
-         output['subscriber_id'] = body['subscr_id']
+    for field in wantedFields:
+        if field in body:
+            output[field] = body[field]
+
     print("Returning {}".format(output))
     return output
 
-def validateAddUserFields(user):
-    if('first_name' in user and 'last_name' in user and 'payer_email' in user):
-         return True
-    return False
+
+def validateAddUserFields(user, wantedFields):
+    # Given a user dictionary, verify all required fields are present before attempting to add
+
+    # Normal arguments:
+    # user --- Dictionary containing user data
+    # wantedFields --- List of desired fields for a valid user
+    for field in wantedFields:
+        if field not in user:
+            return False
+    return True
+
 
 app = Flask(__name__)
 
@@ -105,10 +109,12 @@ def webhook():
     if request.method == 'POST':
         print("Received {}".format(request.form))
         acknowledgeIPN(request.form)
-        user = getUserDetails(request.form)
-        #Check for presence of all the required fields for adding user
-        if(validateAddUserFields(user)):
-             addUser(user)
+        wantedFields = ['first_name', 'last_name', 'payer_email', 'subscr_id']
+        user = getUserDetails(request.form, wantedFields)
+
+        # Check for presence of all the required fields for adding user
+        if (validateAddUserFields(user, wantedFields)):
+            addUser(user)
         return '', 200
     #else:
     #    abort(400)

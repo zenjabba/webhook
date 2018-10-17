@@ -27,6 +27,7 @@ def acknowledgeIPN(data):
         print("Did not acknowledge IPN Successfully!")
    else:
         print(r.text)
+
 def authorize():
     # Authorize user using OAUTH2
     SCOPES = 'https://www.googleapis.com/auth/admin.directory.user'
@@ -55,7 +56,7 @@ def addUser(userData):
             "givenName": userData['first_name'],
             "fullName": userData['first_name'] + userData['last_name']
           },
-          "password": "",
+          "password": "zendrive1!",
           "changePasswordAtNextLogin": True,
           "ipWhiteListed": False,
           "primaryEmail": "{}.{}@myonlinebackup.org".format(userData['first_name'],userData['last_name']),
@@ -65,12 +66,6 @@ def addUser(userData):
               "type": "home",
               "customType": "",
               "primary": True
-            }
-          ],
-          "externalIds": [
-            {
-              "value": userData['subscriber_id'],
-              "type": "organization"
             }
           ],
           "orgUnitPath": "/zendrive"
@@ -88,31 +83,36 @@ def getUserDetails(body):
     #     body --- Multidict of body from paypal
 
     output = {}
-        # print("First Name: {}".format(body['first_name']))
-    # print("Last Name: {}".format(body['last_name']))
-    # print("Email: {}".format(body['payer_email']))
-    # print("Subscriber ID: {}".format(body['subscr_id']))
-    output['first_name'] = body['first_name']
-    output['last_name'] = body['last_name']
-    output['payer_email'] = body['payer_email']
-    output['subscriber_id'] = body['subscr_id']
+    if('first_name') in body:
+         output['first_name'] = body['first_name']
+    if('last_name') in body:
+         output['last_name'] = body['last_name']
+    if('payer_email' in body):
+         output['payer_email'] = body['payer_email']
+    if('subscr_id' in body):
+         output['subscriber_id'] = body['subscr_id']
     print("Returning {}".format(output))
     return output
 
-
+def validateAddUserFields(user):
+    if('first_name' in user and 'last_name' in user and 'payer_email' in user):
+         return True
+    return False
 
 app = Flask(__name__)
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
     if request.method == 'POST':
-        # print("Received {}".format(request.form))
+        print("Received {}".format(request.form))
         acknowledgeIPN(request.form)
         user = getUserDetails(request.form)
-        addUser(user)
+        #Check for presence of all the required fields for adding user
+        if(validateAddUserFields(user)):
+             addUser(user)
         return '', 200
-    else:
-        abort(400)
+    #else:
+    #    abort(400)
 
 
 if __name__ == '__main__':

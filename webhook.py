@@ -15,7 +15,7 @@ def acknowledgeIPN(data):
    VERIFY_URL_TEST = 'https://ipnpb.sandbox.paypal.com/cgi-bin/webscr'
 
    # Switch as appropriate
-   VERIFY_URL = VERIFY_URL_TEST
+   VERIFY_URL = VERIFY_URL_PROD
    payload = data.to_dict()
    payload['cmd'] = '_notify-validate'
    print(payload)

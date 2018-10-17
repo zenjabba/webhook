@@ -14,6 +14,9 @@ Install webhook to be run with `webhook.py` command.
 
 5. `sudo ln -s /opt/webhook/webhook.py /usr/local/bin/webhook.py`
 
-Download `Client ID for Other` JSON into file `credentials.json`
+6. `Goto [quickstart] (https://developers.google.com/admin-sdk/directory/v1/quickstart/python) and "Enable to Directory API"
+
+7. `Download `credentials.json` and put /opt/webhook`
+
 
 

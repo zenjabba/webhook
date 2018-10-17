@@ -16,15 +16,17 @@ def acknowledgeIPN(data):
 
    # Switch as appropriate
    VERIFY_URL = VERIFY_URL_TEST
-   print(data.to_dict())   
+   payload = data.to_dict()
+   payload['cmd'] = '_notify-validate'
+   print(payload)
    r = requests.post(VERIFY_URL,headers={'content-type': 'application/x-www-form-urlencoded',
-           'user-agent': 'Python-IPN-Verification-Script'},data=data.to_dict(),verify=True)
+           'user-agent': 'Python-IPN-Verification-Script'},params=payload,verify=True)
    if(r.text == 'VERIFIED'):
         print("Acknowledged IPN Successfully!")
    elif r.text == 'INVALID':
         print("Did not acknowledge IPN Successfully!")
    else:
-	print(r.text)
+        print(r.text)
 def authorize():
     # Authorize user using OAUTH2
     SCOPES = 'https://www.googleapis.com/auth/admin.directory.user'
@@ -105,8 +107,8 @@ app = Flask(__name__)
 def webhook():
     if request.method == 'POST':
         # print("Received {}".format(request.form))
-	acknowledgeIPN(request.form)
-	user = getUserDetails(request.form)
+        acknowledgeIPN(request.form)
+        user = getUserDetails(request.form)
         addUser(user)
         return '', 200
     else:

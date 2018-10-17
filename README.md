@@ -12,7 +12,7 @@ Install webhook to be run with `webhook.py` command.
 
 4. `sudo python3 -m pip install -r requirements.txt`
 
-5. `sudo ln -s /opt/webhook/webhook.py /usr/local/bin/webhook`
+5. `sudo ln -s /opt/webhook/webhook.py /usr/local/bin/webhook.py`
 
 Download `Client ID for Other` JSON into file `credentials.json`
 
